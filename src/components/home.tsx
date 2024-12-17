@@ -74,6 +74,7 @@ export default function Home() {
   const {
     data,
     isPending,
+    isFetching,
     refetch: refetchSheets,
   } = useQuery<SheetsResponse | undefined>({
     queryKey: ["sheets"],
@@ -181,6 +182,7 @@ export default function Home() {
               // setFilter(filter);
               refetchSheets();
             }}
+            loading={isFetching}
           >
             Apply Filter
           </Button>
@@ -208,7 +210,7 @@ export default function Home() {
           <Icons.loader className="size-4 animate-spin" />
         </Conditional>
 
-        <Conditional satisfies={data?.data && (data?.data.length === 0 && data.sheets.seeded === true)}>
+        <Conditional satisfies={data?.data && data?.data.length === 0 && data.sheets.seeded === true}>
           No Data
         </Conditional>
 
