@@ -111,6 +111,8 @@ export default function Home() {
 
         toast.success(res.data.message);
 
+        refetchSheets();
+
         return res.data;
       } catch (error) {
         toast.error("Something went wrong");
@@ -126,7 +128,7 @@ export default function Home() {
     const query = params.filter;
 
     if (cookies) {
-      console.log("cookies found")
+      console.log("cookies found");
       setFilter(JSON.parse(cookies));
     } else {
       Cookies.set("filter", JSON.stringify(defaultFilters), { expires: 7 });
@@ -206,7 +208,9 @@ export default function Home() {
           <Icons.loader className="size-4 animate-spin" />
         </Conditional>
 
-        <Conditional satisfies={data?.data && data?.data.length === 0}>No Data</Conditional>
+        <Conditional satisfies={data?.data && (data?.data.length === 0 && data.sheets.seeded === true)}>
+          No Data
+        </Conditional>
 
         {data?.data && data?.data.length > 0 && (
           <span className="flex gap-4 flex-wrap lg:flex-nowrap">
@@ -231,14 +235,14 @@ export default function Home() {
         )}
 
         {!seeded && !isPending ? (
-          <>
+          <div className="flex items-center h-full justify-center flex-col gap-4">
             <Button onClick={() => refetch()} loading={isLoading}>
               Populate Sheets
             </Button>
             <p className="text-sm text-muted-foreground">
               Click the button to fetch and store data from the sheets into the database.
             </p>
-          </>
+          </div>
         ) : null}
       </main>
     </section>
